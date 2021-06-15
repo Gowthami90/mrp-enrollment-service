@@ -6,6 +6,7 @@ import lombok.Data;
 public class EnrollmentDaoReq {
 	
 	private String clientId;
+	private String channelId;
 	private String msgts;
 	private String cardNum;
 	private String cvv;

@@ -1,5 +1,6 @@
 package com.citi.membership.enrollment.controller;
 
+import org.apache.log4j.Logger;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -14,10 +15,14 @@ import com.citi.membership.enrollment.util.EnrollmentConstant;
 @ControllerAdvice
 
 public class EnrollControllerAdvice {
+	
+ private Logger logger=Logger.getLogger(EnrollControllerAdvice.class);
+ 
 	@ExceptionHandler(value = EnrollmentReqValidationExcep.class)
 	@ResponseBody
 	public EnrollmentResponse handleReqInvalidExceptions(EnrollmentReqValidationExcep exception) {
 		// TODO need to implement error logs
+		logger.error("EnrollmentReqValidationExcep from validator",exception);
 		EnrollmentResponse enrollResp = buildStatusBlock(exception.getRespCode(), exception.getRespMsg());
 		return enrollResp;
 	}
@@ -26,9 +31,30 @@ public class EnrollControllerAdvice {
 	@ResponseBody
 	public EnrollmentResponse handleSystemError(SystemException exception) {
 		// TODO need to implement error logs
+		logger.error("SystemException from EnrollControllerAdvice",exception);
 		EnrollmentResponse enrollResp = buildStatusBlock(exception.getRespCode(), exception.getRespMsg());
 		return enrollResp;
 	}
+	@ExceptionHandler(value = BusinessException.class)
+	@ResponseBody
+	public EnrollmentResponse handleDataError(BusinessException exception) {
+		logger.error("BusinessException from EnrollControllerAdvice",exception);
+
+		EnrollmentResponse enrollResp = buildStatusBlock(EnrollmentConstant.GENERIC_ERROR_CODE,EnrollmentConstant.GENERIC_ERROR_MSG );
+		return enrollResp;
+
+	}
+	@ExceptionHandler(value = Exception.class)
+	@ResponseBody
+	public EnrollmentResponse handleDataError(Exception exception) {
+		logger.fatal("Exception from EnrollControllerAdvice",exception);
+
+	
+		EnrollmentResponse enrollResp = buildStatusBlock("222","Generic Error from service");
+		return enrollResp;
+
+	}
+	
 
 	private EnrollmentResponse buildStatusBlock(String respCode, String respMsg) {
 		EnrollmentResponse enrollResp = new EnrollmentResponse();
@@ -39,22 +65,7 @@ public class EnrollControllerAdvice {
 		return enrollResp;
 	}
 
-	@ExceptionHandler(value = BusinessException.class)
-	@ResponseBody
-	public EnrollmentResponse handleDataError(BusinessException exception) {
 	
-		EnrollmentResponse enrollResp = buildStatusBlock(EnrollmentConstant.GENERIC_ERROR_CODE,EnrollmentConstant.GENERIC_ERROR_MSG );
-		return enrollResp;
-
-	}
-	@ExceptionHandler(value = Exception.class)
-	@ResponseBody
-	public EnrollmentResponse handleDataError(Exception exception) {
-	
-		EnrollmentResponse enrollResp = buildStatusBlock("222","Generic Error from service");
-		return enrollResp;
-
-	}
 
 
 }

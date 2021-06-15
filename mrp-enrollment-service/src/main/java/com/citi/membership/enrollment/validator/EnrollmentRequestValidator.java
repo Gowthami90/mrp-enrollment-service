@@ -1,5 +1,7 @@
 package com.citi.membership.enrollment.validator;
 
+import org.springframework.stereotype.Component;
+
 import com.citi.membership.enrollment.exception.EnrollmentReqValidationExcep;
 import com.citi.membership.enrollment.model.ClientInfo;
 import com.citi.membership.enrollment.model.CustomerInfo;
@@ -7,6 +9,7 @@ import com.citi.membership.enrollment.model.EnrollmentRequest;
 import com.citi.membership.enrollment.model.EnrollmentResponse;
 import com.citi.membership.enrollment.util.EnrollmentConstant;
 
+@Component
 public class EnrollmentRequestValidator {
 	public void validate(EnrollmentRequest enrollmentReq) throws EnrollmentReqValidationExcep {
 

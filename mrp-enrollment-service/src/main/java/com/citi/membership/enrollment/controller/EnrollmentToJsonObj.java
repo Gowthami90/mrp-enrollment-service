@@ -1,5 +1,8 @@
 package com.citi.membership.enrollment.controller;
 
+import org.apache.log4j.Logger;
+import org.apache.log4j.MDC;
+
 import com.citi.membership.enrollment.model.ClientInfo;
 import com.citi.membership.enrollment.model.CustomerInfo;
 import com.citi.membership.enrollment.model.EnrollmentRequest;
@@ -9,6 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class EnrollmentToJsonObj {
 	
 	public static void main (String [] args) throws JsonProcessingException {	
+		 Logger logger=Logger.getLogger(EnrollmentToJsonObj.class);
 	EnrollmentRequest enrollmentRequest = new EnrollmentRequest();
 	
 	ClientInfo clientInfo = new ClientInfo();
@@ -30,14 +34,14 @@ public class EnrollmentToJsonObj {
 	customerInfo.setMobNum("1234567892");
 	customerInfo.setNameOnCard("vijay");
 	
-	
+	MDC.put("requestId", clientInfo.getReqId());
 	
 	enrollmentRequest.setClientInfo(clientInfo);
 	enrollmentRequest.setCustomerInfo(customerInfo);
 	
 		ObjectMapper mapper = new ObjectMapper();
 		String resp=mapper.writerWithDefaultPrettyPrinter().writeValueAsString(enrollmentRequest);
-		System.out.println(resp);
+		logger.info(resp);
 		
 	}
 }
